@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odonto Smile: Dentistas</title>
+  </head>
+  <body>
+    <h2>Gestión de dentistas</h2>
+
+    <main>
+      <p-button
+        (click)="showDialog($event, 'Nuevo')"
+        icon="pi pi-external-link"
+        label="Nuevo"
+      ></p-button>
+      <div class="card">
+        <p-table
+          #dt1
+          [value]="dentists"
+          dataKey="id"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          [paginator]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+          [globalFilterFields]="[
+            'name',
+            'lastName',
+            'documentNumber',
+            'email',
+            'specialty.name'
+          ]"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width: 10rem">
+                <div class="flex align-items-center">
+                  Nombre
+                  <p-columnFilter
+                    type="text"
+                    field="name"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 2rem">
+                <div class="flex align-items-center">
+                  Documento
+                  <p-columnFilter
+                    type="text"
+                    field="documentNumber"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 5rem">
+                <div class="flex align-items-center">
+                  Correo
+                  <p-columnFilter
+                    type="text"
+                    field="email"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 5rem">
+                <div class="flex align-items-center">
+                  Contraseña
+                  <p-columnFilter
+                    type="text"
+                    field="password"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 5rem">
+                <div class="flex align-items-center">
+                  Fecha de creación
+                  <p-columnFilter
+                    type="date"
+                    field="creationDate"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 5rem">
+                <div class="flex align-items-center">
+                  Especialidad
+                  <p-columnFilter
+                    type="text"
+                    field="specialty"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">Acciones</div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-dentist>
+            <tr>
+              <td>
+                {{ dentist.name ? dentist.name : "" }}
+                {{ dentist.lastName ? dentist.lastName : "" }}
+              </td>
+
+              <td>
+                {{ dentist.documentNumber ? dentist.documentNumber : "" }}
+              </td>
+
+              <td>
+                {{ dentist.email ? dentist.email : "" }}
+              </td>
+
+              <td>
+                {{ dentist.password ? dentist.password : "" }}
+              </td>
+
+              <td>
+                {{ dentist.creationDate | date : "MM/dd/yyyy" }}
+              </td>
+
+              <td>{{ dentist.specialty ? dentist.specialty.name : "" }}</td>
+
+              <td>
+                <p-button
+                  label="Ver"
+                  (onClick)="showDialog(dentist, 'Ver')"
+                  styleClass="p-button-success"
+                ></p-button>
+                <p-button
+                  label="Editar"
+                  (onClick)="showDialog(dentist, 'Editar')"
+                  styleClass="p-button-info"
+                ></p-button>
+                <p-button
+                  label="Eliminar"
+                  (onClick)="delete(dentist)"
+                  styleClass="p-button-danger"
+                ></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No se encontraron registros.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </main>
+
+  </body>
+</html>
+
+<p-dialog
+  header="Dentista"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '50vw', height: '200vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <br />
+    <div>
+      <span class="p-float-label">
+        <input
+          id="id"
+          name="id"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.id"
+          type="number"
+          disabled="true"
+        />
+        <label htmlFor="id">Id</label>
+      </span>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="name"
+          name="name"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.name"
+          #nameInput="ngModel"
+          required
+          type="text"
+          [disabled]="disabled"
+        />
+        <label htmlFor="name">Nombres</label>
+      </span>
+      <div *ngIf="submitted && !nameInput.valid" class="error">
+        El campo nombres es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="lastName"
+          name="lastName"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.lastName"
+          type="text"
+          [disabled]="disabled"
+        />
+        <label htmlFor="lastName">Apellidos</label>
+      </span>
+    </div>
+
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span id="genero">Genero</span>
+      <p-dropdown
+        id="gender"
+        aria-labelledby="gender"
+        [style]="{ width: '100%' }"
+        name="gender"
+        [options]="genders"
+        [(ngModel)]="dentist.gender"
+        optionLabel="name"
+        optionValue="name"
+        #genderInput="ngModel"
+        [required]="true"
+        [disabled]="disabled"
+      ></p-dropdown>
+      <div *ngIf="submitted && !genderInput.valid" class="error">
+        El campo genero es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span id="typeDocument">Tipo de documento</span>
+      <p-dropdown
+        id="typeDocument"
+        aria-labelledby="typeDocument"
+        [style]="{ width: '100%' }"
+        name="typeDocument"
+        [options]="typeDocuments"
+        [(ngModel)]="dentist.typeDocument"
+        optionLabel="name"
+        optionValue="name"
+        #typeDocumentInput="ngModel"
+        [required]="true"
+        [disabled]="disabled"
+      ></p-dropdown>
+      <div *ngIf="submitted && !typeDocumentInput.valid" class="error">
+        El campo tipo de documento es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="documentNumber"
+          name="documentNumber"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.documentNumber"
+          #documentNumberInput="ngModel"
+          required
+          type="number"
+          [disabled]="disabled"
+        />
+        <label htmlFor="documentNumber">Número de documento</label>
+      </span>
+      <div *ngIf="submitted && !documentNumberInput.valid" class="error">
+        El campo número de documento es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="email"
+          name="email"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.email"
+          #emailInput="ngModel"
+          required
+          type="email"
+          [disabled]="disabled"
+        />
+        <label htmlFor="email">Email</label>
+      </span>
+      <div *ngIf="submitted && !emailInput.valid" class="error">
+        El campo email es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="password"
+          name="password"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.password"
+          #passwordInput="ngModel"
+          required
+          type="password"
+          [disabled]="disabled"
+        />
+        <label htmlFor="password">Contraseña</label>
+      </span>
+      <div *ngIf="submitted && !passwordInput.valid" class="error">
+        El campo contraseña es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="phone"
+          name="phone"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.phone"
+          #phoneInput="ngModel"
+          required
+          type="tel"
+          [disabled]="disabled"
+        />
+        <label htmlFor="phone">Teléfono</label>
+      </span>
+      <div *ngIf="submitted && !phoneInput.valid" class="error">
+        El campo teléfono es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="address"
+          name="address"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="dentist.address"
+          #addressInput="ngModel"
+          required
+          type="text"
+          [disabled]="disabled"
+        />
+        <label htmlFor="address">Dirección de residencia</label>
+      </span>
+      <div *ngIf="submitted && !addressInput.valid" class="error">
+        El campo dirección de residencia es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span id="specialty">Especialidad médica</span>
+      <p-dropdown
+        id="specialty"
+        aria-labelledby="specialty"
+        [style]="{ width: '100%' }"
+        name="specialty"
+        [options]="specialtys"
+        [(ngModel)]="dentist.specialty"
+        optionLabel="name"
+        #specialtyInput="ngModel"
+        [required]="true"
+        [disabled]="disabled"
+      ></p-dropdown>
+      <div *ngIf="submitted && !specialtyInput.valid" class="error">
+        El campo especialidad médica es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+    <p-button type="submit" [hidden]="disabled">Guardar</p-button>
+  </form>
+</p-dialog>

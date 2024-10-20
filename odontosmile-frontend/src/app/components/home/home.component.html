@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odonto Smile: Inicio</title>
+  </head>
+  <body>
+    <header>
+      <h1>
+        Odonto Smile - Consultorio Odontológico
+        <p-button
+          class="sign-out"
+          pButton
+          styleClass="p-button-secondary"
+          (onClick)="signOut()"
+          >Cerrar sesión</p-button
+        >
+      </h1>
+    </header>
+
+    <div class="container">
+      <aside class="sidebar">
+        <ul>
+          <li id="administrator" *ngIf="perfil == 'Administrator'">
+            <h2>Administradores</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectAdministrator()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+
+          <li id="receptionist" *ngIf="perfil == 'Administrator'">
+            <h2>Recepcionistas</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectReceptionist()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+
+          <li id="dentist" *ngIf="perfil == 'Administrator'">
+            <h2>Dentistas</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectDentist()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+          <li id="patient" *ngIf="perfil == 'Administrator' || perfil == 'Receptionist'">
+            <h2>Pacientes</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectPatient()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+          <li id="patient" *ngIf="perfil == 'Dentist'">
+            <h2>Atender pacientes</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectPatientCare()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+          <li id="appointment" *ngIf="perfil == 'Administrator' || perfil == 'Receptionist'">
+            <h2>Citas</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectAppointment()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+
+          <li id="medical-history" *ngIf="perfil == 'Administrator' || perfil == 'Dentist' || perfil == 'Receptionist'">
+            <h2>Historia médica</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectMHistory()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+
+          <li id="medical-procedure" *ngIf="perfil == 'Administrator'">
+            <h2>Procedimientos médicos</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectMProcedure()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+
+          <li id="specialty" *ngIf="perfil == 'Administrator'">
+            <h2>Especialidades médicas</h2>
+            <p-button
+              pButton
+              styleClass="p-button-success"
+              (onClick)="redirectSpecialty()"
+              >Seleccionar</p-button
+            >
+            <p-divider layout="horizontal"></p-divider>
+          </li>
+
+        </ul>
+      </aside>
+      <div class="components">
+        <app-administrator *ngIf="administrator"></app-administrator>
+        <app-receptionist *ngIf="receptionist"></app-receptionist>
+        <app-dentist *ngIf="dentist"></app-dentist>
+        <app-patient *ngIf="patient"></app-patient>
+        <app-patient-care *ngIf="patientCare"></app-patient-care>
+        <app-appointment *ngIf="appointment"></app-appointment>
+        <app-medical-history *ngIf="medicalHistory"></app-medical-history>
+        <app-medical-procedure *ngIf="medicalProcedure"></app-medical-procedure>
+        <app-specialty *ngIf="specialty"></app-specialty>
+      </div>
+    </div>
+  </body>
+</html>

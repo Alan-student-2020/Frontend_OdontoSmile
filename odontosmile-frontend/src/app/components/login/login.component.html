@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odonto Smile: Iniciar sesión</title>
+  </head>
+  <body>
+    <div class="top-container">
+      <h1>OdontoSmile</h1>
+      <p>
+        Bienvenido a OdontoSmile, donde cuidamos tu sonrisa con profesionalismo
+        y dedicación. ¡Tu satisfacción es nuestra prioridad!
+      </p>
+    </div>
+
+    <div class="container" id="login-section">
+      <div class="left-section">
+        <img src="../../../assets/banner.png" alt="OdontoSmile" class="main-image" />
+      </div>
+
+      <div class="right-section">
+        <img src="../../../assets/logo.png" alt="Logo OdontoSmile" class="logo-access" />
+        <h2>Bienvenido a OdontoSmile</h2>
+        <p>Inicie sesión para continuar</p>
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+          <div>
+            <span id="userProfile">Perfil del usuario:</span>
+            <p-dropdown
+              id="userProfile"
+              aria-labelledby="userProfile"
+              name="userProfile"
+              [options]="userProfiles"
+              [(ngModel)]="login.userProfile"
+              optionLabel="name"
+              optionValue="value"
+              #userProfileInput="ngModel"
+              [required]="true"
+            ></p-dropdown>
+            <div *ngIf="submitted && !userProfileInput.valid" class="error">
+              El campo perfil del usuario es requerido.
+            </div>
+          </div>
+
+          <div>
+            <label for="documentNumber">Documento:</label>
+            <input
+              id="documentNumber"
+              name="documentNumber"
+              [(ngModel)]="login.documentNumber"
+              #documentNumberInput="ngModel"
+              required
+              type="number"
+            />
+            <div *ngIf="submitted && !documentNumberInput.valid" class="error">
+              El campo numero de documento es requerido.
+            </div>
+          </div>
+
+          <div>
+            <label for="password">Contraseña:</label>
+            <input
+              id="password"
+              name="password"
+              [(ngModel)]="login.password"
+              #passwordInput="ngModel"
+              required
+              type="password"
+            />
+            <div *ngIf="submitted && !passwordInput.valid" class="error">
+              El campo contraseña es requerido.
+            </div>
+          </div>
+
+          <button type="submit">Iniciar sesión</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Sobre nosotros</h3>
+          <p>
+            OdontoSmile es una plataforma diseñada para facilitar la gestión de
+            consultorios odontológicos, ofreciendo soluciones innovadoras y
+            eficientes.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Servicios</h3>
+          <ul>
+            <li>Gestión de citas</li>
+            <li>Historiales clínicos</li>
+            <li>Facturación</li>
+            <li>Atención al cliente</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Nuestra sede</h3>
+          <p>Calle Falsa 123, Ciudad Ejemplo</p>
+        </div>
+        <div class="footer-section">
+          <h3>Links</h3>
+          <ul>
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Servicios</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2024 OdontoSmile - Todos los derechos reservados |
+          <a href="#">Términos y condiciones</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

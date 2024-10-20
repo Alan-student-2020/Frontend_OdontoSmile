@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odonto Smile: Atender Pacientes</title>
+  </head>
+  <body>
+    <h2>Pacientes por atender</h2>
+
+    <main>
+      <section id="tabla-citas">
+        <div class="card">
+          <p-table
+            #dt1
+            [value]="appointments"
+            dataKey="id"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+            [globalFilterFields]="[
+              'patient.name',
+              'patient.lastName',
+              'status.name'
+            ]"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="min-width: 10rem">
+                  <div class="flex align-items-center">
+                    Paciente
+                    <p-columnFilter
+                      type="text"
+                      field="patient"
+                      display="menu"
+                    ></p-columnFilter>
+                  </div>
+                </th>
+                <th style="min-width: 5rem">
+                  <div class="flex align-items-center">
+                    Procedimiento médico
+                    <p-columnFilter
+                      type="text"
+                      field="medicalProcedure"
+                      display="menu"
+                    ></p-columnFilter>
+                  </div>
+                </th>
+                <th style="min-width: 5rem">
+                  <div class="flex align-items-center">
+                    Fecha
+                    <p-columnFilter
+                      type="text"
+                      field="date"
+                      display="menu"
+                    ></p-columnFilter>
+                  </div>
+                </th>
+                <th style="min-width: 5rem">
+                  <div class="flex align-items-center">
+                    Estado
+                    <p-columnFilter
+                      type="text"
+                      field="status"
+                      display="menu"
+                    ></p-columnFilter>
+                  </div>
+                </th>
+                <th style="min-width: 15rem">
+                  <div class="flex align-items-center">Acciones</div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-appointment>
+              <tr>
+                <td>
+                  {{ appointment.patient.name ? appointment.patient.name : "" }}
+                  {{
+                    appointment.patient.lastName
+                      ? appointment.patient.lastName
+                      : ""
+                  }}
+                </td>
+
+                <td>
+                  {{
+                    appointment.medicalProcedure
+                      ? appointment.medicalProcedure.name
+                      : ""
+                  }}
+                </td>
+
+                <td>
+                  {{ appointment.date | date : "yyyy-MM-dd hh:mm" }}
+                </td>
+
+                <td>
+                  {{
+                    appointment.status === "Confirmed"
+                      ? "Confirmada"
+                      : appointment.status === "Earring"
+                      ? "Pendiente"
+                      : appointment.status === "Cancelled"
+                      ? "Cancelada"
+                      : appointment.status === "Finished"
+                      ? "Finalizada"
+                      : "Desconocido"
+                  }}
+                </td>
+
+                <td>
+                  <p-button
+                    label="Ver"
+                    (onClick)="showDialog(appointment, 'Ver')"
+                    styleClass="p-button-success"
+                  ></p-button>
+                  <p-button *ngIf="appointment.status != 'Finished'"
+                    label="Atender"
+                    (onClick)="showDialog(appointment, 'Atender')"
+                    styleClass="p-button-info"
+                  ></p-button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7">No se encontraron registros.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<p-dialog
+  header="Cita"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '50vw', height: '200vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <div>
+      <span id="patient">Paciente:</span>
+      <p-dropdown
+        id="patient"
+        aria-labelledby="patient"
+        [style]="{ width: '100%' }"
+        name="patient"
+        [options]="patients"
+        [(ngModel)]="appointment.patient"
+        optionLabel="name"
+        [filter]="true"
+        [disabled]="disabled"
+        filterBy="name"
+        placeholder="Selecciona un paciente..."
+      >
+        <ng-template let-patient pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <div>{{ patient.name }} {{ patient.lastName }}</div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span id="dentist">Procedimiento médico:</span>
+      <p-dropdown
+        id="medicalProcedure"
+        aria-labelledby="medicalProcedure"
+        [style]="{ width: '100%' }"
+        name="medicalProcedure"
+        [options]="medicalProcedures"
+        [(ngModel)]="appointment.medicalProcedure"
+        optionLabel="name"
+        [filter]="true"
+        [disabled]="disabled"
+        filterBy="name"
+        placeholder="Selecciona un procedimiento médico..."
+      ></p-dropdown>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <label htmlFor="date">Fecha:</label>
+      <input
+        id="date"
+        name="date"
+        [style]="{ width: '100%' }"
+        pInputText
+        [(ngModel)]="appointment.date"
+        [disabled]="disabled"
+        type="datetime-local"
+      />
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span id="status">Estado:</span>
+      <p-dropdown
+        id="status"
+        aria-labelledby="status"
+        [style]="{ width: '100%' }"
+        name="status"
+        [options]="appointmentStatus"
+        [(ngModel)]="appointment.status"
+        optionLabel="name"
+        optionValue="value"
+        [disabled]="disabled"
+      ></p-dropdown>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <label htmlFor="treatment">Tratamiento:</label>
+      <input
+        id="treatment"
+        name="treatment"
+        [style]="{ width: '100%' }"
+        pInputText
+        [(ngModel)]="medicalHistory.treatment"
+        type="text"
+        [disabled]="disabled"
+      />
+      <p-divider layout="horizontal"></p-divider>
+    </div>
+
+    <div>
+      <label htmlFor="note">Notas:</label>
+      <input
+        id="note"
+        name="note"
+        [style]="{ width: '100%' }"
+        pInputText
+        [(ngModel)]="medicalHistory.note"
+        type="text"
+        [disabled]="disabled"
+      />
+
+      <p-divider layout="horizontal"></p-divider>
+    </div>
+
+    <p-button type="submit" [hidden]="disabled">Guardar</p-button>
+  </form>
+</p-dialog>

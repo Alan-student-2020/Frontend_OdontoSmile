@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odonto Smile: Historia Médica</title>
+  </head>
+  <body>
+    <h2>Historial médico</h2>
+
+    <main>
+      <section id="search-patient">
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+          <div>
+            <span id="patient">Paciente:</span>
+            <p-dropdown
+              id="patient"
+              aria-labelledby="patient"
+              [style]="{ width: '100%' }"
+              name="patient"
+              [options]="patients"
+              [(ngModel)]="medicalHistory.patient"
+              optionLabel="name"
+              #patientInput="ngModel"
+              [required]="true"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              placeholder="Selecciona un paciente..."
+            >
+              <ng-template let-patient pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                  <div>{{ patient.name }} {{ patient.lastName }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <div *ngIf="submitted && !patientInput.valid" class="error">
+              El campo paciente es requerido.
+            </div>
+          </div>
+          <p-divider layout="horizontal"></p-divider>
+          <p-button type="submit">Consultar</p-button>
+        </form>
+      </section>
+
+      <section id="information-patient" *ngIf="medicalHistory.patient">
+        <h2>Información del Paciente</h2>
+        <p>
+          <strong>Nombre:</strong> {{ medicalHistory.patient.name ?? "" }}
+          {{ medicalHistory.patient.lastName ?? "" }}
+        </p>
+        <p>
+          <strong>Genero:</strong> {{ medicalHistory.patient.gender ?? "" }}
+        </p>
+        <p>
+          <strong>Documento:</strong>
+          {{ medicalHistory.patient.typeDocument ?? "" }}
+          {{ medicalHistory.patient.documentNumber ?? "" }}
+        </p>
+        <p>
+          <strong>Correo eléctronico:</strong>
+          {{ medicalHistory.patient.email ?? "" }}
+        </p>
+        <p>
+          <strong>Teléfono:</strong> {{ medicalHistory.patient.phone ?? "" }}
+        </p>
+        <p>
+          <strong>Dirección de residencia:</strong>
+          {{ medicalHistory.patient.address ?? "" }}
+        </p>
+        <p>
+          <strong>Fecha de creación:</strong>
+          {{ medicalHistory.patient.creationDate ?? "" | date : "MM/dd/yyyy" }}
+        </p>
+      </section>
+
+      <section id="treatments">
+        <h2>Tratamientos y Notas</h2>
+        <div class="card">
+          <p-table
+            #dt1
+            [value]="medicalHistorys"
+            dataKey="id"
+            [rows]="10"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            [paginator]="true"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="min-width: 10rem">
+                  <div class="flex align-items-center">
+                    Fecha
+                    <p-columnFilter
+                      type="text"
+                      field="date"
+                      display="menu"
+                    ></p-columnFilter>
+                  </div>
+                </th>
+                <th style="min-width: 5rem">
+                  <div class="flex align-items-center">
+                    Tratamiento
+                    <p-columnFilter
+                      type="text"
+                      field="treatment"
+                      display="menu"
+                    ></p-columnFilter>
+                  </div>
+                </th>
+                <th style="min-width: 5rem">
+                  <div class="flex align-items-center">
+                    Notas
+                    <p-columnFilter
+                      type="text"
+                      field="note"
+                      display="menu"
+                    ></p-columnFilter>
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-medicalHistory>
+              <tr>
+                <td>
+                  {{ medicalHistory.date ?? "" | date : "yyyy-MM-dd hh:mm" }}
+                </td>
+
+                <td>
+                  {{ medicalHistory.treatment ?? "" }}
+                </td>
+
+                <td>
+                  {{ medicalHistory.note ?? "" }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="7">No se encontraron registros.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

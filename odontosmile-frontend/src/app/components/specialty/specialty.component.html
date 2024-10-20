@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odonto Smile: Especialidades Médicas</title>
+  </head>
+  <body>
+    <h2>Gestión de especialidades médicas</h2>
+
+    <main>
+      <p-button
+        (click)="showDialog($event, 'Nuevo')"
+        icon="pi pi-external-link"
+        label="Nuevo"
+      ></p-button>
+      <div class="card">
+        <p-table
+          #dt1
+          [value]="specialtys"
+          dataKey="id"
+          [rows]="10"
+          [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          [paginator]="true"
+          currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+          [globalFilterFields]="[
+            'name'
+          ]"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width: 10rem">
+                <div class="flex align-items-center">
+                  Nombre
+                  <p-columnFilter
+                    type="text"
+                    field="name"
+                    display="menu"
+                  ></p-columnFilter>
+                </div>
+              </th>
+              <th style="min-width: 15rem">
+                <div class="flex align-items-center">
+                  Acciones
+                </div>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-specialty>
+            <tr>
+              <td>
+                {{ specialty.name?? "" }}
+              </td>
+
+              <td>
+                <p-button
+                  label="Ver"
+                  (onClick)="showDialog(specialty, 'Ver')"
+                  styleClass="p-button-success"
+                ></p-button>
+                <p-button
+                  label="Editar"
+                  (onClick)="showDialog(specialty, 'Editar')"
+                  styleClass="p-button-info"
+                ></p-button>
+                <p-button
+                  label="Eliminar"
+                  (onClick)="delete(specialty)"
+                  styleClass="p-button-danger"
+                ></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No se encontraron registros.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </main>
+  </body>
+</html>
+
+<p-dialog
+  header="Especialidad médica"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '50vw', height: '200vw' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <br />
+    <div>
+      <span class="p-float-label">
+        <input
+          id="id"
+          name="id"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="specialty.id"
+          type="number"
+          disabled="true"
+        />
+        <label htmlFor="id">Id</label>
+      </span>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+
+    <div>
+      <span class="p-float-label">
+        <input
+          id="name"
+          name="name"
+          [style]="{ width: '100%' }"
+          pInputText
+          [(ngModel)]="specialty.name"
+          #nameInput="ngModel"
+          required
+          type="text"
+          [disabled]="disabled"
+        />
+        <label htmlFor="name">Nombres</label>
+      </span>
+      <div *ngIf="submitted && !nameInput.valid" class="error">
+        El campo nombres es requerido.
+      </div>
+    </div>
+    <p-divider layout="horizontal"></p-divider>
+    <p-button type="submit" [hidden]="disabled">Guardar</p-button>
+  </form>
+</p-dialog>
